@@ -22,7 +22,7 @@ mysql_select_db("comp3753", $con);
 </tr>	
 <tr>
 <?php
-$result = mysql_query("SELECT * FROM user");
+$result = mysql_query("SELECT * FROM user WHERE name='Xiaoqi'");
 
 while ($row = mysql_fetch_array($result)) 
 {

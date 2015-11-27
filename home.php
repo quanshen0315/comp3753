@@ -49,7 +49,7 @@ a:hover, a:active {
 try {
 
     $dbh = new PDO('mysql:host=localhost;dbname=comp3753',
-    'root', 'mukainight');
+    'root', '');
 
     $current_user = 1000;
     //$sql=$dbh->prepare('select * from photo where unum in (select fnum from follow where unum=1000)');

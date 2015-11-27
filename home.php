@@ -1,38 +1,10 @@
 <html>
 <head>
 	<title></title>
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
 </head>
 <body>
-<style>
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
 
-li {
-    float: left;
-}
-
-a:link, a:visited {
-    display: block;
-    width: 120px;
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #98347a;
-    text-align: center;
-    padding: 4px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-a:hover, a:active {
-    background-color: #63224f;
-}
-</style>
-</head>
-<body>
 
 <ul>
   <li><a href="home.php">Home</a></li>
@@ -52,11 +24,9 @@ try {
     'root', '');
 
     $current_user = 1000;
-    //$sql=$dbh->prepare('select * from photo where unum in (select fnum from follow where unum=1000)');
-    //$sql->execute();
 
     $sql = $dbh->prepare('SELECT * FROM photo WHERE unum IN (SELECT fnum FROM follow WHERE unum=?)');
-    $sql->execute(array(1000));
+    $sql->execute(array($current_user));
     $rc = $sql->rowCount();
 
     while($row = $sql->fetch())
@@ -72,9 +42,6 @@ try {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();
 }
-
-
-
 
      ?>
 

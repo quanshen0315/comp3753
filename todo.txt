@@ -1,0 +1,14 @@
+Important:
+Login/logout creating and destroying user session
+Settings page
+Finish photo page
+Creating moderators
+Reporting photos
+Tags
+Profile page
+
+Less important:
+Photos disappear when deleted and their page displays the reason
+
+
+Not very important:

@@ -14,13 +14,18 @@ a:link, a:visited {
     width: 120px;
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #98347a;
+    background-color: #01735c;
     text-align: center;
-    padding: 4px;
+    padding: 3px;
     text-decoration: none;
     text-transform: uppercase;
 }
 
 a:hover, a:active {
-    background-color: #63224f;
+    background-color: #e47294;;
+}
+
+body {
+    background-color: #6b1f3c;
+    color: #FFFFFF;
 }

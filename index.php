@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
-</head>
-<body>
-
 <?php
+include('header.php');
 $con = mysql_connect("localhost","root","");
 if (!$con)
 {

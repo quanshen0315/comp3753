@@ -1,39 +1,28 @@
-<html>
-<head>
-	<title></title>
-    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
-</head>
-<body>
+ <?php
+session_start();     
+include 'lib/config.php';
+include 'header.php';
 
-
-<ul>
-  <li><a href="home.php">Home</a></li>
-  <li><a href="profile.php">Profile</a></li>
-  <li><a href="login.php">Login</a></li>
-  <li><a href="register.php">Register</a></li>
-  <li><a href="settings.php">Settings</a></li>
-</ul>
-
-
-
-  <?php
 
 try {
 
-    $dbh = new PDO('mysql:host=localhost;dbname=comp3753',
-    'root', '');
+    $dbh = new PDO('mysql:dbname=' . $config["dbname"] . 
+    ';host=' . $config["host"], $config["user"], $config["pass"]);
 
-    $current_user = 1000;
+    $sql = $dbh->prepare('SELECT * FROM photo inner join user on 
+                          photo.unum=user.id WHERE unum IN 
+                          (SELECT fnum FROM follow WHERE unum=?)');
 
-    $sql = $dbh->prepare('SELECT * FROM photo WHERE unum IN (SELECT fnum FROM follow WHERE unum=?)');
-    $sql->execute(array($current_user));
-    $rc = $sql->rowCount();
+    $sql->execute(array($_SESSION["user"]));
 
     while($row = $sql->fetch())
         {
-            print($row['unum'] . "<br>");
-            $img = $row['id'] . ".jpg";
-            echo "<img src='img/$img' alt='hello' height='256' width='256'><br>";
+            print($row['name'] . "<br>");
+            $img = $row[0] . ".jpg";
+            echo('<a href="photo.php?img=' . $row[0] . '">');
+            echo("<img src='img/$img' alt='hello' height='256' 
+                 width='256'><br>");
+            echo('</a>');
         }
 
     $dbh = null;

@@ -1,25 +1,11 @@
-<html>
-<head>
-	<title></title>
-    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
-</head>
-<body>
-
-<ul>
-  <li><a href="home.php">Home</a></li>
-  <li><a href="profile.php">Profile</a></li>
-  <li><a href="login.php">Login</a></li>
-  <li><a href="register.php">Register</a></li>
-  <li><a href="settings.php">Settings</a></li>
-</ul>
-
-
-</body>
-</html>
-=======
 <?php
+include("lib/config.php");
+include('header.php');  
+
 try {
-	$dbh = new PDO('mysql:host=localhost;dbname=comp3753;charset=utf8', "root", "");
+	$dbh = new PDO('mysql:host=localhost;dbname=comp3753;charset=utf8', 
+    "root", $config["pass"]);
+
 } catch (PDOException $e) {
 	echo "Error!: " . $e->getMessage() . "<br/>";
 	die();

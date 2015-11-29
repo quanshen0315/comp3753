@@ -35,13 +35,7 @@
 </html>
 <?php
 if(isset($_POST['Un']) && isset($_POST['psw'])&& isset($_POST['psw2'])&& isset($_POST['email']))
-{
-	try {
-	$dbh = new PDO('mysql:host=localhost;dbname=comp3753;charset=utf8', "root", "");
-} catch (PDOException $e) {
-	echo "Error!: " . $e->getMessage() . "<br/>";
-	die();
-}
+$dbh = useDatabase();
 
 $name = $_POST['Un'];
 $pass = $_POST['psw'];

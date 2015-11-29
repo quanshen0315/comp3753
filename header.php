@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head>
 	<title></title>
@@ -14,6 +15,7 @@
      <li><a href="register.php">Register</a></li>
      <li><a href="login.php">Login</a></li>
      <li><a href="logout.php">Logout</a></li>
+     <li><a href="moderator.php">Moderator</a></li>
 </ul>
 
 

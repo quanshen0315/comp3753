@@ -1,5 +1,4 @@
 <?php
-session_start();
 include('lib/config.php');
 include('header.php');
 

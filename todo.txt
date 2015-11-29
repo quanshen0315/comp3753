@@ -1,5 +1,4 @@
 Pages redirect to login if there is no user session
-View a specific user's profile
 Photo page (like, comment, tag, report)
 Moderator can view list of reported photos & delete them
 Hide deleted photos

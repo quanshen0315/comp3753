@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('lib/config.php');
 include('header.php');
 
@@ -31,10 +32,14 @@ if ($user != $_SESSION["user"])
         $sql->execute(array($_SESSION["user"], $_GET["user"]));
         if(!$sql->fetch())
             {
-                print("<form action='profile.php' method='POST'>");
+                print("<form action='profile.php?user=$user' method='POST'>");
                 print("<input type='submit' name='follow' value='follow'>");
             }
         else
+            {
+                print("<form action='profile.php?user=$user' method='POST'>");
+                print("<input type='submit' name='unfollow' value='unfollow'>");
+            }
     }
 echo "<br>";
 
@@ -50,6 +55,15 @@ while($row = $sql->fetch())
 if (isset($_POST["follow"]))
     {
         $sql = $dbh->prepare('INSERT INTO follow VALUES (?, ?)');
-        $sql->execute($user, $_GET["user"]);
+        $sql->execute(array($_SESSION["user"], $_GET["user"]));
+        header("Refresh:0");
     }
+
+if (isset($_POST["unfollow"]))
+    {
+        $sql = $dbh->prepare('DELETE FROM follow WHERE unum=? AND fnum=?');
+        $sql->execute(array($_SESSION["user"], $_GET["user"]));
+        header("Refresh:0");
+    }
+
 ?>

@@ -1,45 +1,84 @@
 <?php
-include('lib/config.php');
-include('header.php');
-
-try {
+	include('header.php');
+	?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register</title>
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
+</head>
+<body>
+	<form action="register.php" method="POST">
+		<table>
+			<tr>
+				<td>username:</td>
+				<td><input type="text" name="Un" required/></td>
+			</tr>
+			<tr>
+				<td>password:</td>
+				<td><input type="password" name="psw" required/></td>
+			</tr>
+			<tr>
+				<td>re-password:</td>
+				<td><input type="password" name="psw2" required/></td>
+			</tr>
+			<tr>
+				<td>e-mail:</td>
+				<td><input type="email" name="email" required/></td>
+			</tr>
+			<tr>
+				<td><input type="submit" name="register_sub" value="register"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+<?php
+if(isset($_POST['Un']) && isset($_POST['psw'])&& isset($_POST['psw2'])&& isset($_POST['email']))
+{
+	try {
 	$dbh = new PDO('mysql:host=localhost;dbname=comp3753;charset=utf8', "root", "");
 } catch (PDOException $e) {
 	echo "Error!: " . $e->getMessage() . "<br/>";
 	die();
 }
 
-$user = $_POST('r_un');
-$pass = $_POST('r_pas');
-$r_pass = $_POST('r_pas_r');
-$email = $_POST('r_email');
+$name = $_POST['Un'];
+$pass = $_POST['psw'];
+$rpass = $_POST['psw2'];
+$email = $_POST['email'];
 
-if($pass != $r_pass)
-{
-	echo "wrong";
-	header("Location:register.html");
+if($pass != $rpass)
+{   
+	exit("password not same"); //password not same
 }
 
-$stmt = $dbh->prepare('SELECT name=? or email=? FROM user');
-$id = $dbh->prepare('SELECT MAX(id) FROM user');
-$stmt->execute(array($_POST["r_un"], $_POST['r_email']));
-$result = $stmt->fetchAll();
-if (is_null($result))
 
+$check1 = $dbh->prepare('SELECT * FROM user where name=?');      //check the same username
+$check1->execute(array($name));
+if(!empty($check1->fetchAll()))
+{
+	exit("name exist");
+}
 
-$sql = "INSERT INTO user" 
+$check2 = $dbh->prepare('SELECT * FROM user where email=?');     //check the same email
+$check2->execute(array($email));
+if(!empty($check2->fetchAll()))
+{
+	exit("email exist");
+}
+
+$id = $dbh->prepare('SELECT MAX(id) FROM user');  //get the Max id
+$id->execute();
+(int)$uid = ($id->fetch()['0']) + 1;
+echo $uid;
+
+$reg = "INSERT INTO user" 
 		. "(id, name, password, email) VALUES " 
-		. "(:id, :name, :password, :email)";	
+		. "(?, ?, ?, ?)";
 
-$stmt = $dbh->prepare('SELECT * FROM user WHERE name=?');
-$stmt->execute(array($_POST["Un"]));
-$result = $stmt->fetchAll();
-
-foreach ($result as $row) {
-    if ($row['password'] == $psw)
-  	    header("Location:home.php");
-    else
-  	    header("Location:login.html");	# code...
+$create = $dbh->prepare($reg);
+$create->execute(array($uid, $name, $pass, $email));
+header("Location:login.php");
 }
 ?>
->>>>>>> a31d6d54bf1634fa81b6093b1b1aa6c8fac3cc06

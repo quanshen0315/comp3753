@@ -2,9 +2,13 @@
 session_start();     
 include 'lib/config.php';
 include 'header.php';
-
+include 'lib/fun.php';
 
 try {
+    if (!isset($_SESSION))
+        {
+            header("Location:login.php");
+        }
 
     $dbh = new PDO('mysql:dbname=' . $config["dbname"] . 
     ';host=' . $config["host"], $config["user"], $config["pass"]);
@@ -15,14 +19,16 @@ try {
 
     $sql->execute(array($_SESSION["user"]));
 
+    $column = 1;
     while($row = $sql->fetch())
         {
-            print($row['name'] . "<br>");
-            $img = $row[0] . ".jpg";
-            echo('<a href="photo.php?img=' . $row[0] . '">');
-            echo("<img src='img/$img' alt='hello' height='256' 
-                 width='256'><br>");
-            echo('</a>');
+            if ($column % 3 == 0)
+                {
+                    echo "<br>";
+                }
+            draw_photo($row, 300, 256);
+
+            $column++;
         }
 
     $dbh = null;

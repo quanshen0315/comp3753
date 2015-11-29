@@ -1,5 +1,6 @@
 <?php
 	include('header.php');
+include('lib/config.php');
 	?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,16 @@
 <?php
 if(isset($_POST['Un']) && isset($_POST['psw']))
 {
+<<<<<<< HEAD
 $dbh = useDatabase();
+=======
+try {
+	$dbh = useDatabase();
+} catch (PDOException $e) {
+	echo "Error!: " . $e->getMessage() . "<br/>";
+	die();
+}
+>>>>>>> 868ca68d845d6d629c46d18df1704ec18ccc3ce7
 
 $stmt = $dbh->prepare('SELECT * FROM user WHERE name=?');
 $stmt->execute(array($_POST['Un']));

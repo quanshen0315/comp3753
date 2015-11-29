@@ -1,5 +1,6 @@
 <?php
 	include('header.php');
+include('lib/config.php');
 	?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +36,17 @@
 </html>
 <?php
 if(isset($_POST['Un']) && isset($_POST['psw'])&& isset($_POST['psw2'])&& isset($_POST['email']))
+<<<<<<< HEAD
 $dbh = useDatabase();
+=======
+{
+	try {
+        $dbh = useDatabase();
+} catch (PDOException $e) {
+	echo "Error!: " . $e->getMessage() . "<br/>";
+	die();
+}
+>>>>>>> 868ca68d845d6d629c46d18df1704ec18ccc3ce7
 
 $name = $_POST['Un'];
 $pass = $_POST['psw'];

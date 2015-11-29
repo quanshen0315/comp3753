@@ -12,6 +12,7 @@
      <li><a href="login.php">Login</a></li>
      <li><a href="register.php">Register</a></li>
      <li><a href="settings.php">Settings</a></li>
+     <li><a href="upload.php">Upload</a></li>
      <li><a href="demo_session1.php">T_Login</a></li>
      <li><a href="demo_session2.php">T_Logout</a></li>
 </ul>

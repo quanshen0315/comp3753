@@ -42,5 +42,7 @@ if (isset($_POST["img_title"]))
             $sql = $dbh->prepare("insert into photo values (?, ?, ?, ?, ?, ?, ?)"); 
             $sql->execute(array($new_id, $date->format('Y-m-d H:i:s'),
             $_POST["img_title"], $_POST["img_desc"], 0, 0, $_SESSION["user"]));
+
+            print("The image was uploaded successfully");
         }
 ?>

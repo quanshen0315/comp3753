@@ -1,26 +1,35 @@
 <?php
+session_start();
+include('lib/config.php');
 include('header.php');
-$con = mysql_connect("localhost","root","");
-if (!$con)
+
+if (isset($_GET["user"]))
     {
-        die('Could not connect: ' . mysql_error());
+        $user = $_GET["user"];
     }
-mysql_select_db("comp3753", $con);
+else
+    $user = $_SESSION["user"];
 
-$result = mysql_query("SELECT * FROM user");
+$dbh = useDatabase();
 
-while ($row = mysql_fetch_array($result)) 
+$sql = $dbh->prepare('SELECT * FROM user WHERE id=?');
+
+$sql->execute(array($user));
+
+while($row = $sql->fetch())
     {
-        echo "<tr><td>" . $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['password'] . "</td><td>" . $row['email']. "</td></tr>";
+        print("ID: " . $row["id"] . "<br>");
+        print("Name: " . $row["name"] . "<br>");
+        print("Email: " . $row["email"] . "<br>");
     }
 
-mysql_close($con);
+echo "<br>";
+
+$sql = $dbh->prepare('SELECT * FROM photo WHERE unum=?');
+$sql->execute(array($user));
+
+while($row = $sql->fetch())
+    {
+        draw_photo($row, 300, 256);
+    }
 ?>
-
-
-
-</tr>
-</table>
-
-</body>
-</html>

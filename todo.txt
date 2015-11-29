@@ -1,14 +1,7 @@
-Important:
-Login/logout creating and destroying user session
-Settings page
-Finish photo page
-Creating moderators
-Reporting photos
-Tags
-Profile page
-
-Less important:
-Photos disappear when deleted and their page displays the reason
-
-
-Not very important:
+Photo page (like, comment, tag, report)
+Filter photos by tag
+Moderator can view list of reported photos & delete them
+Hide deleted photos
+Moderator can promote user
+Moderator can disable user accounts
+Disabled user accounts will display (at login) why they were disabled

@@ -1,7 +1,6 @@
 <?php
+session_start();
 include('header.php');
-if(!isset($_SESSION["user"]))
-    header('Location: /login.php');
 
 ?>
 
@@ -10,10 +9,13 @@ if(!isset($_SESSION["user"]))
 <body>
 
 <?php
-session_unset();
-session_destroy();
+if(isset($_SESSION["user"]))
+    {
+        session_unset();
+        session_destroy();
+        print("You logged out!");
+    }
 
-print("You logged out!");
 ?>
 
 </body>

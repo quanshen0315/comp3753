@@ -1,6 +1,7 @@
 <?php
     session_start();
 	include('header.php');
+include('lib/config.php');
 	?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +29,7 @@
 if(isset($_POST['Un']) && isset($_POST['psw']))
 {
 try {
-	$dbh = new PDO('mysql:host=localhost;dbname=comp3753;charset=utf8', "root", "");
+	$dbh = useDatabase();
 } catch (PDOException $e) {
 	echo "Error!: " . $e->getMessage() . "<br/>";
 	die();

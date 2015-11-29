@@ -2,6 +2,10 @@
 session_start();
 include('header.php');
 include('lib/config.php');
+
+if(!isset($_SESSION["user"]))
+    header('Location: /login.php');
+
 ?>
 
 <!DOCTYPE html>

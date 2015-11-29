@@ -1,3 +1,5 @@
+// remember to disable commenting for non-users
+
 <?php
 include('header.php');
 include('lib/config.php');

@@ -3,7 +3,7 @@ include('lib/config.php');
 include('header.php');
 
 if(!isset($_SESSION["user"]) && !isset($_GET["user"]))
-    header('Location: /login.php');
+    header('Location:login.php');
 
 if (isset($_GET["user"]))
     {

@@ -35,7 +35,14 @@ $result = $stmt->fetchAll();
 if(empty($result))
 	exit("wrong username or password!");
 
+$disable = $dbh->prepare('SELECT * FROM disable WHERE unum=?');
 foreach ($result as $row) {
+	$disable->execute(array($row['id']));
+	if (!empty($re = $disable->fetchAll()))
+	{
+		foreach ($re as $reason)
+			exit("reason: " . $reason['reason']);
+	}
     if ($row['password'] == $_POST['psw'])
     {
     	$_SESSION["user"] = $row['id'];

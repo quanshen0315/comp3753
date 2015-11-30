@@ -1,4 +1,6 @@
 <?php
+// spaghetti zone
+
 include('header.php');
 include('lib/config.php');
 
@@ -7,9 +9,12 @@ if (isset($_GET["img"]))
         $dbh = useDatabase();
         $img = $_GET["img"];
 
-        $sql = $dbh->prepare('SELECT * FROM photo WHERE id=?');
+        $sql = $dbh->prepare('SELECT * FROM photo inner join user on user.id=photo.unum WHERE photo.id=?');
         $sql->execute(array($img));
         $row = $sql->fetch();
+
+        $owner = $row["unum"];
+        print("<h1><a href='profile.php?user=$owner'>" . $row["name"] . "</a></h1>");
 
         // Views
         $new_viewcount = $row["views"];
@@ -53,6 +58,13 @@ if (isset($_GET["img"]))
             }
         print("<br>");
 
+        if ($owner = $_SESSION["user"])
+            {
+                print("<form action='photo.php?img=$img' method='POST'>");
+                print("<input type='text' name='new_tag'>");
+                print("<input type='submit' value='tag'></form>");
+            }
+
         // Reporting
         print("<form action='photo.php?img=$img' method='POST'>");
         print("<input type='radio' name='report' value='stolen'> Stolen work");
@@ -80,73 +92,82 @@ if (isset($_GET["img"]))
 else
     print("file not found");
 
-?>
 
-<html>
-<body>
-
-
-
-</body>
-</html>
-
-<?php
-if (isset($_POST["like"]))
-    {
-        $sql = $dbh->prepare("SELECT * FROM decide WHERE unum=? and pnum=?");
-        $sql->execute(array($_SESSION["user"], $img));
-        $row = $sql->fetch();
-
-        if ($row["ld"] != 1)
-            {
-   
-                $date = new DateTime();
-                $dt = $date->format('Y-m-d');
-                $sql = $dbh->prepare("INSERT INTO decide VALUES (?, ?, ?, ?)");
-                $sql->execute(array($dt, 1, $_SESSION["user"], $img));
-                $likes++;
-                header('Refresh:0');
-            }
-    }
-
-
-if (isset($_POST["report"]))
-    {
-        $sql = $dbh->prepare("SELECT * FROM report WHERE unum=? and pnum=?");
-        $sql->execute(array($_SESSION["user"], $img));
-        $row = $sql->fetch();
-
-        print($row["unum"]);
-        if (!isset($row["unum"]))
+// Form submission
+if (isset($_SESSION["user"]))
+{
+    if (isset($_POST["like"]))
         {
-            $sql = $dbh->prepare("INSERT INTO report VALUES (?, ?, ?)");
-            $sql->execute(array($_POST["report"], $_SESSION["user"], $img));
+            $sql = $dbh->prepare("SELECT * FROM decide WHERE unum=? and pnum=?");
+            $sql->execute(array($_SESSION["user"], $img));
+            $row = $sql->fetch();
+
+            if ($row["ld"] != 1)
+                {
+   
+                    $date = new DateTime();
+                    $dt = $date->format('Y-m-d');
+                    $sql = $dbh->prepare("INSERT INTO decide VALUES (?, ?, ?, ?)");
+                    $sql->execute(array($dt, 1, $_SESSION["user"], $img));
+                    $likes++;
+                    header('Refresh:0');
+                }
         }
-    }
 
-if (isset($_POST["comment"]))
-    {
-        $sql = $dbh->prepare("SELECT MAX(id) FROM comments");
-        $sql->execute();
-        $new_id = $sql->fetch();
-        $new_id[0]++;
 
-        $date = new DateTime();
-        $dt = $date->format('Y-m-d H:i:s');
+    if (isset($_POST["new_tag"]))
+        {
+            print($_POST["new_tag"]);
+            $sql = $dbh->prepare("SELECT * FROM tags WHERE pnum=? AND tag=?");
+            $sql->execute(array($img, $_POST["new_tag"]));
+            $row = $sql->fetch();
 
-        $sql = $dbh->prepare("INSERT INTO comments VALUES (?, ?, ?, ?, ?)");
-        $sql->execute(array($new_id[0], $dt, $_POST["comment"],
-        $_SESSION["user"], $img));
+            if ($row["tag"] != $_POST["new_tag"])
+                {
+                    $sql = $dbh->prepare("INSERT INTO tags VALUES (?, ?)");
+                    $sql->execute(array($img, $_POST["new_tag"]));
+                    header('Refresh:0');
+                }
+        }
+      
 
-        // secrets
-        $sql = $dbh->prepare("SELECT name FROM user WHERE id=?");
-        $sql->execute(array($_SESSION["user"]));
-        $username = $sql->fetch()["name"];
+    if (isset($_POST["report"]))
+        {
+            $sql = $dbh->prepare("SELECT * FROM report WHERE unum=? and pnum=?");
+            $sql->execute(array($_SESSION["user"], $img));
+            $row = $sql->fetch();
 
-        print("<h2>" . $username . "</h2>");
-        print("<p>" . $_POST["comment"] . "</p>");
+
+            if (!isset($row["unum"]))
+                {
+                    $sql = $dbh->prepare("INSERT INTO report VALUES (?, ?, ?)");
+                    $sql->execute(array($_POST["report"], $_SESSION["user"], $img));
+                }
+        }
+
+    if (isset($_POST["comment"]))
+        {
+            $sql = $dbh->prepare("SELECT MAX(id) FROM comments");
+            $sql->execute();
+            $new_id = $sql->fetch();
+            $new_id[0]++;
+
+            $date = new DateTime();
+            $dt = $date->format('Y-m-d H:i:s');
+
+            $sql = $dbh->prepare("INSERT INTO comments VALUES (?, ?, ?, ?, ?)");
+            $sql->execute(array($new_id[0], $dt, $_POST["comment"],
+            $_SESSION["user"], $img));
+
+            // secrets
+            $sql = $dbh->prepare("SELECT name FROM user WHERE id=?");
+            $sql->execute(array($_SESSION["user"]));
+            $username = $sql->fetch()["name"];
+
+            print("<h2>" . $username . "</h2>");
+            print("<p>" . $_POST["comment"] . "</p>");
 
         
-    }
-
+        }
+}
 ?>

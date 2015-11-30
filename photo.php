@@ -67,6 +67,13 @@ if (isset($_GET["img"]))
                 print("<h2>" . $crow["name"] . "</h2>");
                 print("<p>" . $crow["comment"] . "</p>");
             }
+
+        // Reporting
+        print("<form action='photo.php?img=$img' method='POST'>");
+        print("<input type='radio' name='report' value='stolen'> Stolen work");
+        print("<input type='radio' name='report' value='spam'> Spam");
+        print("<input type='radio' name='report' value='rules'> Against the rules&nbsp&nbsp");
+        print("<input type='submit' value='submit'></form>");
     }
 else
     print("file not found");
@@ -123,4 +130,19 @@ if (isset($_POST["comment"]))
 
         
     }
+
+if (isset($_POST["report"]))
+    {
+        $sql = $dbh->prepare("SELECT * FROM report WHERE unum=? and pnum=?");
+        $sql->execute(array($_SESSION["user"], $img));
+        $row = $sql->fetch();
+
+        print($row["unum"]);
+        if (!isset($row["unum"]))
+        {
+            $sql = $dbh->prepare("INSERT INTO report VALUES (?, ?, ?)");
+            $sql->execute(array($_POST["report"], $_SESSION["user"], $img));
+        }
+    }
+
 ?>

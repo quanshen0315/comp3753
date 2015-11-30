@@ -51,6 +51,14 @@ if (isset($_GET["img"]))
                 $tag = $row["tag"];
                 print("<a href='tag.php?tag=$tag'>$tag</a>");
             }
+        print("<br>");
+
+        // Reporting
+        print("<form action='photo.php?img=$img' method='POST'>");
+        print("<input type='radio' name='report' value='stolen'> Stolen work");
+        print("<input type='radio' name='report' value='spam'> Spam");
+        print("<input type='radio' name='report' value='rules'> Against the rules&nbsp&nbsp");
+        print("<input type='submit' value='submit'></form>");
 
         // Comments
         print("<form action='photo.php?img=$img' method='POST'>");
@@ -68,12 +76,6 @@ if (isset($_GET["img"]))
                 print("<p>" . $crow["comment"] . "</p>");
             }
 
-        // Reporting
-        print("<form action='photo.php?img=$img' method='POST'>");
-        print("<input type='radio' name='report' value='stolen'> Stolen work");
-        print("<input type='radio' name='report' value='spam'> Spam");
-        print("<input type='radio' name='report' value='rules'> Against the rules&nbsp&nbsp");
-        print("<input type='submit' value='submit'></form>");
     }
 else
     print("file not found");
@@ -102,8 +104,24 @@ if (isset($_POST["like"]))
                 $dt = $date->format('Y-m-d');
                 $sql = $dbh->prepare("INSERT INTO decide VALUES (?, ?, ?, ?)");
                 $sql->execute(array($dt, 1, $_SESSION["user"], $img));
-                header("photo.php?img=$img");
+                $likes++;
+                header('Refresh:0');
             }
+    }
+
+
+if (isset($_POST["report"]))
+    {
+        $sql = $dbh->prepare("SELECT * FROM report WHERE unum=? and pnum=?");
+        $sql->execute(array($_SESSION["user"], $img));
+        $row = $sql->fetch();
+
+        print($row["unum"]);
+        if (!isset($row["unum"]))
+        {
+            $sql = $dbh->prepare("INSERT INTO report VALUES (?, ?, ?)");
+            $sql->execute(array($_POST["report"], $_SESSION["user"], $img));
+        }
     }
 
 if (isset($_POST["comment"]))
@@ -129,20 +147,6 @@ if (isset($_POST["comment"]))
         print("<p>" . $_POST["comment"] . "</p>");
 
         
-    }
-
-if (isset($_POST["report"]))
-    {
-        $sql = $dbh->prepare("SELECT * FROM report WHERE unum=? and pnum=?");
-        $sql->execute(array($_SESSION["user"], $img));
-        $row = $sql->fetch();
-
-        print($row["unum"]);
-        if (!isset($row["unum"]))
-        {
-            $sql = $dbh->prepare("INSERT INTO report VALUES (?, ?, ?)");
-            $sql->execute(array($_POST["report"], $_SESSION["user"], $img));
-        }
     }
 
 ?>

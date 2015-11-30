@@ -1,6 +1,1 @@
-Photo page (like, comment, tag, report)
-Moderator can view list of reported photos & delete them
-Hide deleted photos
-Moderator can promote user
-Moderator can disable user accounts
 Disabled user accounts will display (at login) why they were disabled
